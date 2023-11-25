@@ -35,12 +35,15 @@
 # Project name
 App = driver
 
+# Compiler and flags
+#CC = Make.exe
+# CFLAGS = -mcpu=cortex-m3 -mthumb -Og fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -fno-move-loop-invariants -Wall -Wextra  -g3 -T STM32F103C8TX_FLASH.ld -nostartfiles -Xlinker --gc-sections -L"./" -Wl,-Map,"$(App).map" --specs=nano.specs -o "$(App).elf" $(OBJS) -Wall -Wextra -g
+
 # Commands
 REMOVE_DIR = rmdir /s /q
-MAKE_DIR = mkdir
 
 # Directories
-ROOT_DIR = ..
+MAKE_DIR = Make
 OUT_DIR = Out
 BIN_DIR = $(OUT_DIR)/bin
 
@@ -52,9 +55,6 @@ INC_DIR :=
 # Include Makefiles for all components
 include *[!Make]/*makefile
 
-# Compiler and flags
-CC = "../gcc-arm-none-eabi-10.3-2021.10-win32/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-g++.exe"
-# CFLAGS = -mcpu=cortex-m3 -mthumb -Og fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -fno-move-loop-invariants -Wall -Wextra  -g3 -T STM32F103C8TX_FLASH.ld -nostartfiles -Xlinker --gc-sections -L"./" -Wl,-Map,"$(App).map" --specs=nano.specs -o "$(App).elf" $(OBJS) -Wall -Wextra -g
 
 # Phony targets
 
@@ -69,14 +69,14 @@ all: drv | $(OUT_DIR)|$(BIN_DIR)
 
 .PHONY: drv
 drv: $(OUT_DIR)|$(BIN_DIR)
-	$(CC) -I$(INC_DIR) -o $(OBJS) -c $(SRCS)
+	$(CC) -I$(INC_DIR) -o$(OBJS) -c$(SRCS)
 	
 # Output Directories rule
 
 $(BIN_DIR): $(OUT_DIR)
-	$(MAKE_DIR) $(subst /,\,$(BIN_DIR))
+	mkdir $(subst /,\,$(BIN_DIR))
 $(OUT_DIR):
-	$(MAKE_DIR) $(subst /,\,$(OUT_DIR))
+	mkdir $(subst /,\,$(OUT_DIR))
 
 
 # Clean rule
