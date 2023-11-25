@@ -1,4 +1,4 @@
-# Makefile for stm32f103-drivers
+# Makefile for Dio Driver
 
 # -----------------------------------------------------------------------------
 # Project: stm32f103-drivers
@@ -30,58 +30,25 @@
 #   - Add dependencies for header files in the "Additional dependencies" section
 #     using the format: $(BUILD_DIR)/example.o: $(INC_DIR)/example.h
 # -----------------------------------------------------------------------------
-# Makefile for MyProject
-
-# Project name
-App = driver
-
-# Commands
-REMOVE_DIR = rmdir /s /q
-MAKE_DIR = mkdir
+# Makefile for Dio Driver
 
 # Directories
-ROOT_DIR = ..
-OUT_DIR = Out
-BIN_DIR = $(OUT_DIR)/bin
+DIO_DIR = Dio
+SRCS_DIR = $(DIO_DIR)/src
+DIO_INC_DIR = $(DIO_DIR)/include
+
 
 # Source files
-SRCS :=
-OBJS :=
-INC_DIR :=
+DIO_SRCS :=
+DIO_SRCS +=\
+	$(SRCS_DIR)/Dio.c
+SRCS +=$(DIO_SRCS)
 
-# Include Makefiles for all components
-include *[!Make]/*makefile
+# Object files
+DIO_OBJS := $(subst $(SRCS_DIR),$(BIN_DIR),$(DIO_SRCS))
+DIO_OBJS := $(patsubst %.c,%.o,$(DIO_OBJS))
+OBJS +=$(DIO_OBJS)
 
-# Compiler and flags
-CC = "../gcc-arm-none-eabi-10.3-2021.10-win32/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-g++.exe"
-# CFLAGS = -mcpu=cortex-m3 -mthumb -Og fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -fno-move-loop-invariants -Wall -Wextra  -g3 -T STM32F103C8TX_FLASH.ld -nostartfiles -Xlinker --gc-sections -L"./" -Wl,-Map,"$(App).map" --specs=nano.specs -o "$(App).elf" $(OBJS) -Wall -Wextra -g
-
-# Phony targets
-
-.PHONY: all
-
-# Default target
-
-all: drv | $(OUT_DIR)|$(BIN_DIR)
-	$(CC) $(CFLAGS)
-
-# Drviers target
-
-.PHONY: drv
-drv: $(OUT_DIR)|$(BIN_DIR)
-	$(CC) -I$(INC_DIR) -o $(OBJS) -c $(SRCS)
-	
-# Output Directories rule
-
-$(BIN_DIR): $(OUT_DIR)
-	$(MAKE_DIR) $(subst /,\,$(BIN_DIR))
-$(OUT_DIR):
-	$(MAKE_DIR) $(subst /,\,$(OUT_DIR))
-
-
-# Clean rule
-
-.PHONY: clean
-clean:
-	$(REMOVE_DIR) Out 
-
+# include directory
+INC_DIR +=\
+	$(DIO_INC_DIR)
